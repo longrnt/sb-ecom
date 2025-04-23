@@ -1,6 +1,7 @@
 package com.ecommerce.project.controller;
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +23,9 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories() {
+        CategoryResponse categoryResponse = categoryService.getAllCategories();
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")
@@ -35,22 +36,14 @@ public class CategoryController {
 
     @DeleteMapping("/public/categories/{id}")
     public ResponseEntity<Object> deleteCategory(@PathVariable Long id) {
-        try {
-            String status = categoryService.deleteCategory(id);
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+        String status = categoryService.deleteCategory(id);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<Object> updateCategoryById(@RequestBody Category category,
+    public ResponseEntity<Object> updateCategoryById(@Valid @RequestBody Category category,
                                                      @PathVariable Long categoryId) {
-        try {
-            Category updatedCategory = categoryService.updateCategory(category, categoryId);
-            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+        Category updatedCategory = categoryService.updateCategory(category, categoryId);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 }
