@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exception.APIException;
 import com.ecommerce.project.exception.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.model.Product;
@@ -41,6 +42,19 @@ public class ProductServiceImpl implements ProductService {
         Product product = modelMapper.map(productDTO, Product.class);
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+
+        boolean ifProductPresent = false;
+
+        for (Product p: category.getProducts()) {
+            if (p.getProductName().equals(productDTO.getProductName())) {
+                ifProductPresent = true;
+                break;
+            }
+        }
+
+        if (ifProductPresent) {
+            throw new APIException("Product already exists");
+        }
 
         product.setImage("default.png");
         product.setCategory(category);
