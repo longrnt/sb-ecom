@@ -17,7 +17,7 @@ public class Product {
     private String productName;
     private String image;
     private String description;
-    private String quantity;
+    private Integer quantity;
     private double price;
     private double discount;
     private double specialPrice;
